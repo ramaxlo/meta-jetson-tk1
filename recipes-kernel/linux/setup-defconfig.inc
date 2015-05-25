@@ -10,7 +10,7 @@ do_setup_defconfig() {
     # Always copy the defconfig file to .config to keep consistency
     # between the case where there is a real config and the in kernel
     # tree config
-    cp ${WORKDIR}/defconfig ${S}/.config
+    cp ${WORKDIR}/defconfig ${B}/.config
 }
 
 # define our own do_configure that will:
@@ -21,11 +21,12 @@ do_setup_defconfig() {
 #      does
 do_configure() {
     echo ${KERNEL_LOCALVERSION} > ${B}/.scmversion
-    echo ${KERNEL_LOCALVERSION} > ${S}/.scmversion
-    config=`cat ${S}/.config | grep use-kernel-config | cut -d= -f2`
+    #echo ${KERNEL_LOCALVERSION} > ${S}/.scmversion
+    config=`cat ${B}/.config | grep use-kernel-config | cut -d= -f2`
     if [ "x${config}" != "x" ]
     then
-        oe_runmake ${config}
+        cd ${S}
+        oe_runmake O=${B} ${config}
     else
         yes '' | oe_runmake oldconfig
     fi
