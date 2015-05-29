@@ -28,6 +28,7 @@ do_configure() {
         cd ${S}
         oe_runmake O=${B} ${config}
     else
-        yes '' | oe_runmake oldconfig
+        cd ${S}
+        yes '' | oe_runmake O=${B} oldconfig
     fi
 }
